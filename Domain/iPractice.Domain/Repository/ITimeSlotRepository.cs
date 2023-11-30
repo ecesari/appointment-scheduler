@@ -2,7 +2,7 @@
 
 namespace iPractice.Domain.Repository
 {
-    public interface IPsychologistRepository:IBaseRepository<Psychologist>
+    public interface ITimeSlotRepository:IBaseRepository<TimeSlot>
     {
     }
 }

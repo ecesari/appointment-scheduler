@@ -1,8 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using iPractice.Api.Models;
+using iPractice.Application.Psychologists.Commands.CreateAvailability;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -13,10 +14,12 @@ namespace iPractice.Api.Controllers
     public class PsychologistController : ControllerBase
     {
         private readonly ILogger<PsychologistController> _logger;
+        private readonly IMediator _mediator;
 
-        public PsychologistController(ILogger<PsychologistController> logger)
+        public PsychologistController(ILogger<PsychologistController> logger, IMediator mediator)
         {
             _logger = logger;
+            _mediator = mediator;
         }
 
         [HttpGet]
@@ -36,7 +39,10 @@ namespace iPractice.Api.Controllers
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<ActionResult> CreateAvailability([FromRoute] long psychologistId, [FromBody] Availability availability)
         {
-            throw new NotImplementedException();
+            //TODO:availability move
+           await _mediator.Send(new CreateAvailabilityCommand { PsychologistId = psychologistId, TimeFrom = availability.TimeFrom, TimeTo = availability.TimeTo });
+
+            return Ok();
         }
 
         /// <summary>

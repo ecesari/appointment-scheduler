@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace iPractice.Domain.Repository
 {
-    internal interface IClientRepository:IBaseRepository<Client>
+    public interface IClientRepository:IBaseRepository<Client>
     {
     }
 }

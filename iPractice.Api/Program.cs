@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
-using iPractice.DataAccess;
+using iPractice.Infrastructure;
+using iPractice.Infrastructure.Data;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;

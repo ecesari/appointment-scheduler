@@ -6,8 +6,9 @@ namespace iPractice.Domain.Repository
     {
         Task<IReadOnlyList<T>> GetAllAsync();
         //Task<IReadOnlyList<T>> GetAsync(IBaseSpecification<T> spec);
-        Task<T> GetByIdAsync(int id);
+        Task<T> GetByIdAsync(long id);
         Task<T> AddAsync(T entity);
+        Task<T> AddAsync(List<T> entity);
         Task UpdateAsync(T entity);
         Task DeleteAsync(T entity);
     }
