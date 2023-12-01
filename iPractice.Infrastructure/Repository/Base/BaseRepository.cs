@@ -1,66 +1,66 @@
-﻿using CoolBlue.Products.Domain.Entities;
-using CoolBlue.Products.Domain.Repositories;
-using CoolBlue.Products.Domain.Specifications;
-using CoolBlue.Products.Infrastructure.Data;
+﻿using iPractice.Domain.Entities;
+using iPractice.Domain.Repository;
+using iPractice.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
-namespace CoolBlue.Products.Infrastructure.Repository.Base
+namespace iPractice.Infrastructure.Repository.Base
 {
     public class BaseRepository<T> : IBaseRepository<T> where T : BaseEntity
     {
-        protected readonly InsuranceDbContext _insuranceDb;
+        protected readonly ApplicationDbContext applicationDb;
 
-        public BaseRepository(InsuranceDbContext insuranceDb)
+        public BaseRepository(ApplicationDbContext insuranceDb)
         {
-            _insuranceDb = insuranceDb;
+            applicationDb = insuranceDb;
         }
 
         public async Task<T> AddAsync(T entity)
         {
-            await _insuranceDb.Set<T>().AddAsync(entity);
-            await _insuranceDb.SaveChangesAsync();
+            await applicationDb.Set<T>().AddAsync(entity);
+            await applicationDb.SaveChangesAsync();
+            return entity;
+        }
+
+        public async Task<List<T>> AddAsync(List<T> entity)
+        {
+            await applicationDb.AddRangeAsync(entity);
+            await applicationDb.SaveChangesAsync();
             return entity;
         }
 
         public async Task DeleteAsync(T entity)
         {
-            _insuranceDb.Set<T>().Remove(entity);
-            await _insuranceDb.SaveChangesAsync();
+            applicationDb.Set<T>().Remove(entity);
+            await applicationDb.SaveChangesAsync();
         }
 
 
         public async Task<IReadOnlyList<T>> GetAllAsync()
         {
-            return await _insuranceDb.Set<T>().ToListAsync();
-        }
-
-        public async Task<IReadOnlyList<T>> GetAsync(IBaseSpecification<T> spec)
-        {
-            return await ApplySpecification(spec).ToListAsync();
-
+            return await applicationDb.Set<T>().ToListAsync();
         }
 
         public async Task<T> GetByIdAsync(int id)
         {
-            return await _insuranceDb.Set<T>().FindAsync(id);
+            return await applicationDb.Set<T>().FindAsync(id);
+        }
+
+        public async Task<T> GetByIdAsync(long id)
+        {
+            return await applicationDb.Set<T>().FindAsync(id);
         }
 
         public async Task UpdateAsync(T entity)
         {
-            _insuranceDb.Entry(entity).State = EntityState.Modified;
+            applicationDb.Entry(entity).State = EntityState.Modified;
             try
             {
-                await _insuranceDb.SaveChangesAsync();
+                await applicationDb.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException ex)
             {
                 throw ex;
             }
-        }
-
-        private IQueryable<T> ApplySpecification(IBaseSpecification<T> spec)
-        {
-            return SpecificationEvaluator<T>.GetQuery(_insuranceDb.Set<T>().AsQueryable(), spec);
         }
 
     }

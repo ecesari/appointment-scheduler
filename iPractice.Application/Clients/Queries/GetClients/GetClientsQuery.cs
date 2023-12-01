@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using iPractice.Application.Common.Models;
+using iPractice.Application.Clients.Queries.GetClients;
 using iPractice.Domain.Repository;
 using MediatR;
 

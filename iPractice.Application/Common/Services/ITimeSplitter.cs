@@ -1,6 +1,6 @@
 ﻿using iPractice.Domain.Entities;
 
-namespace iPractice.Application.Common.Interfaces
+namespace iPractice.Application.Common.Services
 {
     public interface ITimeSplitter
     {

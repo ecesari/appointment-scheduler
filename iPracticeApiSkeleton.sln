@@ -5,13 +5,13 @@ VisualStudioVersion = 17.5.33502.453
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iPractice.Api", "iPractice.Api\iPractice.Api.csproj", "{DFFEEE47-3EDD-46E9-93A1-0B0C4DA0C83D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iPractice.DataAccess", "iPractice.DataAccess\iPractice.DataAccess.csproj", "{4D1473E5-E85B-4B90-ABD3-6D779675D535}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iPractice.Domain", "Domain\iPractice.Domain\iPractice.Domain.csproj", "{5A65AB57-F08A-4D6C-BD61-1E62A9F6AAD6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "iPractice.Application", "iPractice.Application\iPractice.Application.csproj", "{6F55E145-14ED-4A82-98D8-44CC44BFC48C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iPractice.Application", "iPractice.Application\iPractice.Application.csproj", "{6F55E145-14ED-4A82-98D8-44CC44BFC48C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "iPractice.Infrastructure", "iPractice.Infrastructure\iPractice.Infrastructure.csproj", "{CEAA41F0-5257-443A-BA93-FFF439C08B20}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iPractice.Infrastructure", "iPractice.Infrastructure\iPractice.Infrastructure.csproj", "{CEAA41F0-5257-443A-BA93-FFF439C08B20}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iPractice.Test", "iPractice.Test\iPractice.Test.csproj", "{1191CA2B-B775-4F5D-B321-D098979D2859}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,10 +23,6 @@ Global
 		{DFFEEE47-3EDD-46E9-93A1-0B0C4DA0C83D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DFFEEE47-3EDD-46E9-93A1-0B0C4DA0C83D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DFFEEE47-3EDD-46E9-93A1-0B0C4DA0C83D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4D1473E5-E85B-4B90-ABD3-6D779675D535}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4D1473E5-E85B-4B90-ABD3-6D779675D535}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4D1473E5-E85B-4B90-ABD3-6D779675D535}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4D1473E5-E85B-4B90-ABD3-6D779675D535}.Release|Any CPU.Build.0 = Release|Any CPU
 		{5A65AB57-F08A-4D6C-BD61-1E62A9F6AAD6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{5A65AB57-F08A-4D6C-BD61-1E62A9F6AAD6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5A65AB57-F08A-4D6C-BD61-1E62A9F6AAD6}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -39,6 +35,10 @@ Global
 		{CEAA41F0-5257-443A-BA93-FFF439C08B20}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CEAA41F0-5257-443A-BA93-FFF439C08B20}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CEAA41F0-5257-443A-BA93-FFF439C08B20}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1191CA2B-B775-4F5D-B321-D098979D2859}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1191CA2B-B775-4F5D-B321-D098979D2859}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1191CA2B-B775-4F5D-B321-D098979D2859}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1191CA2B-B775-4F5D-B321-D098979D2859}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

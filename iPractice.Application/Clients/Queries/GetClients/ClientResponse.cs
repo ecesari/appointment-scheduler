@@ -1,4 +1,4 @@
-﻿namespace iPractice.Application.Common.Models
+﻿namespace iPractice.Application.Clients.Queries.GetClients
 {
     public class ClientResponse
     {

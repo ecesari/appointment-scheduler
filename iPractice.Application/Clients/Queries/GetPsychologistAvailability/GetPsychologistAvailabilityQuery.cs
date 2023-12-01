@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
-using iPractice.Application.Common.Models;
+using iPractice.Application.Clients.Queries.GetPsychologistAvailability;
+using iPractice.Application.Common.Exceptions;
+using iPractice.Domain.Entities;
 using iPractice.Domain.Repository;
 using MediatR;
 
@@ -21,14 +23,31 @@ namespace iPractice.Application.Clients.Commands.CreateAvailability
         }
 
         public async Task<List<PsychologistAvailabilityResponse>> Handle(GetPsychologistAvailabilityQuery request, CancellationToken cancellationToken)
-        {            
-            var client = await repository.GetByIdAsync(request.ClientId);
+        {
+            var client = await repository.GetByIdAsync(request.ClientId) ?? throw new EntityNotFoundException(nameof(Client), request.ClientId);
             var psychologists = client.Psychologists;
             var appointmentIdList = psychologists.Select(appointment => appointment.Id).ToList();
+            var timeSlots = psychologists.Select(psychologist => psychologist.Availability.Where(appointment => !appointmentIdList.Contains(appointment.Id))).ToList();
             //TODO:refactor query
-            var timeSlots = psychologists.Select(psychologist=> psychologist.Availability.Where(appointment => !appointmentIdList.Contains(appointment.Id))).ToList();
-            var returnModel = mapper.Map<List<PsychologistAvailabilityResponse>>(timeSlots);
-            return returnModel;
+            var responseList = new List<PsychologistAvailabilityResponse>();
+            foreach (var psychologist in psychologists) {
+                foreach (var timeslot in psychologist.Availability)
+                {
+                    if (appointmentIdList.Contains(timeslot.Id))                 
+                        continue;
+                    
+                    var response = new PsychologistAvailabilityResponse
+                    {
+                        PsychologistId = psychologist.Id,
+                        PsychologistName = psychologist.Name,
+                        TimeFrom = timeslot.TimeFrom,
+                        TimeTo = timeslot.TimeTo,
+                        TimeSlotId = timeslot.Id
+                    };
+                    responseList.Add(response);
+                }
+            }
+            return responseList;
         }
     }
 }

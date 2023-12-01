@@ -1,3 +1,6 @@
+using iPractice.Api.ServiceCollections;
+using iPractice.Application.Clients.Commands.CreateAvailability;
+using iPractice.Application.Common.Services;
 using iPractice.Infrastructure.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -31,8 +34,12 @@ namespace iPractice.Api
 
 
             });
-            
+
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlite(Configuration.GetConnectionString("Sqlite")));
+            services.AddRepositories();
+            services.AddAutoMapper();
+            services.AddTransient<ITimeSplitter, TimeSplitter>();
+            services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(GetClientsQuery).Assembly));
 
             services.AddControllers();
         }

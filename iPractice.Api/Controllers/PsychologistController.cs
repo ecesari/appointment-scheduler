@@ -13,13 +13,13 @@ namespace iPractice.Api.Controllers
     [Route("[controller]")]
     public class PsychologistController : ControllerBase
     {
-        private readonly ILogger<PsychologistController> _logger;
-        private readonly IMediator _mediator;
+        private readonly ILogger<PsychologistController> logger;
+        private readonly IMediator mediator;
 
         public PsychologistController(ILogger<PsychologistController> logger, IMediator mediator)
         {
-            _logger = logger;
-            _mediator = mediator;
+            this.logger = logger;
+            this.mediator = mediator;
         }
 
         [HttpGet]
@@ -39,9 +39,7 @@ namespace iPractice.Api.Controllers
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<ActionResult> CreateAvailability([FromRoute] long psychologistId, [FromBody] Availability availability)
         {
-            //TODO:availability move
-           await _mediator.Send(new CreateAvailabilityCommand { PsychologistId = psychologistId, TimeFrom = availability.TimeFrom, TimeTo = availability.TimeTo });
-
+           await mediator.Send(new CreateAvailabilityCommand { PsychologistId = psychologistId, TimeFrom = availability.TimeFrom, TimeTo = availability.TimeTo });
             return Ok();
         }
 
@@ -55,7 +53,8 @@ namespace iPractice.Api.Controllers
         [ProducesResponseType(typeof(Availability), (int)HttpStatusCode.OK)]
         public async Task<ActionResult<Availability>> UpdateAvailability([FromRoute] long psychologistId, [FromRoute] long availabilityId, [FromBody] Availability availability)
         {
-            throw new NotImplementedException();
+            await mediator.Send(new CreateAvailabilityCommand { PsychologistId = psychologistId, TimeFrom = availability.TimeFrom, TimeTo = availability.TimeTo });
+            return Ok();
         }
     }
 }

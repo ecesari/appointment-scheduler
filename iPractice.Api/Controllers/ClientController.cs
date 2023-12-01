@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
-using AutoMapper;
-using iPractice.Api.Models;
 using iPractice.Application.Clients.Commands.CreateAppointment;
 using iPractice.Application.Clients.Commands.CreateAvailability;
+using iPractice.Application.Clients.Queries.GetClients;
+using iPractice.Application.Clients.Queries.GetPsychologistAvailability;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -15,16 +15,14 @@ namespace iPractice.Api.Controllers
     [Route("[controller]")]
     public class ClientController : ControllerBase
     {
-        private readonly ILogger<ClientController> _logger;
-        private readonly IMediator _mediator;
-        private readonly IMapper _mapper;
+        private readonly ILogger<ClientController> logger;
+        private readonly IMediator mediator;
 
 
-        public ClientController(ILogger<ClientController> logger, IMediator mediator, IMapper mapper)
+        public ClientController(ILogger<ClientController> logger, IMediator mediator)
         {
-            _logger = logger;
-            _mediator = mediator;
-            _mapper = mapper;
+            this.logger = logger;
+            this.mediator = mediator;
         }
 
 
@@ -33,11 +31,10 @@ namespace iPractice.Api.Controllers
         /// </summary>
         /// <returns>All clients</returns>
         [HttpGet]
-        [ProducesResponseType(typeof(IEnumerable<ClientViewModel>), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult<IEnumerable<ClientViewModel>>> Get()
+        [ProducesResponseType(typeof(IEnumerable<ClientResponse>), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult<IEnumerable<ClientResponse>>> Get()
         {
-            var response = await _mediator.Send(new GetClientsQuery());
-            var result = _mapper.Map<List<ClientViewModel>>(response);
+            var result = await mediator.Send(new GetClientsQuery());
             return result;
         }
 
@@ -48,11 +45,10 @@ namespace iPractice.Api.Controllers
         /// <param name="clientId">The client ID</param>
         /// <returns>All time slots for the selected client</returns>
         [HttpGet("{clientId}/timeslots")]
-        [ProducesResponseType(typeof(IEnumerable<PsychologistAvailability>), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult<IEnumerable<PsychologistAvailability>>> GetAvailableTimeSlots(long clientId)
+        [ProducesResponseType(typeof(IEnumerable<PsychologistAvailabilityResponse>), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult<IEnumerable<PsychologistAvailabilityResponse>>> GetAvailableTimeSlots(long clientId)
         {
-            var response = await _mediator.Send(new GetPsychologistAvailabilityQuery { ClientId = clientId });
-            var result = _mapper.Map<List<PsychologistAvailability>>(response);
+            var result = await mediator.Send(new GetPsychologistAvailabilityQuery { ClientId = clientId });
             return result;
         }
 
@@ -65,9 +61,9 @@ namespace iPractice.Api.Controllers
         [HttpPost("{clientId}/appointment")]
         [ProducesResponseType(typeof(bool), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        public async Task<ActionResult> CreateAppointment(long clientId, [FromBody] PsychologistAvailability timeSlot)
+        public async Task<ActionResult> CreateAppointment(long clientId, [FromBody] PsychologistAvailabilityResponse timeSlot)
         {
-             await _mediator.Send(new CreateAppointmentCommand { ClientId = clientId, PsychologistId = timeSlot.PsychologistId, TimeSlotId = timeSlot.TimeSlotId });
+             await mediator.Send(new CreateAppointmentCommand { ClientId = clientId, PsychologistId = timeSlot.PsychologistId, TimeSlotId = timeSlot.TimeSlotId });
             return Ok();
         }
     }

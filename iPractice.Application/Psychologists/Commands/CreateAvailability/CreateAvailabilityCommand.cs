@@ -1,17 +1,19 @@
-﻿using iPractice.Application.Common.Interfaces;
+﻿using iPractice.Application.Common.Exceptions;
+using iPractice.Application.Common.Services;
+using iPractice.Domain.Entities;
 using iPractice.Domain.Repository;
 using MediatR;
 
 namespace iPractice.Application.Psychologists.Commands.CreateAvailability
 {
-    public class CreateAvailabilityCommand : IRequest
+    public class CreateAvailabilityCommand : IRequest<long>
     {
         public DateTime TimeFrom { get; set; }
         public DateTime TimeTo { get; set; }
         public long PsychologistId { get; set; }
     }
 
-    public class CreateAvailabilityCommandHandler : IRequestHandler<CreateAvailabilityCommand>
+    public class CreateAvailabilityCommandHandler : IRequestHandler<CreateAvailabilityCommand, long>
     {
         private readonly IPsychologistRepository repository;        
         private readonly ITimeSlotRepository timeSlotRepository;
@@ -24,18 +26,15 @@ namespace iPractice.Application.Psychologists.Commands.CreateAvailability
             this.timeSplitter = timeSplitter;
         }
 
-        public async Task Handle(CreateAvailabilityCommand request, CancellationToken cancellationToken)
+        public async Task<long> Handle(CreateAvailabilityCommand request, CancellationToken cancellationToken)
         {
-            //TODO: add error handling
-            var psychologist = await repository.GetByIdAsync(request.PsychologistId);
-            //create timeslots
+            var psychologist = await repository.GetByIdAsync(request.PsychologistId) ?? throw new EntityNotFoundException(nameof(Psychologist), request.PsychologistId); ;
             var timeslots = timeSplitter.Split(request.TimeFrom, request.TimeTo, 30);
             await timeSlotRepository.AddAsync(timeslots);
-            //add timeslots to psychologists
             psychologist.Availability.AddRange(timeslots);
             await repository.UpdateAsync(psychologist);
-            //TODO: return psychologist id or not
             //maybe call to notify client
+            return psychologist.Id;
         }
     }
 }

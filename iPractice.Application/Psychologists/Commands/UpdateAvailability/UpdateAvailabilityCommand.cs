@@ -1,18 +1,20 @@
-﻿using iPractice.Application.Common.Interfaces;
+﻿using iPractice.Application.Common.Exceptions;
+using iPractice.Application.Common.Services;
+using iPractice.Domain.Entities;
 using iPractice.Domain.Repository;
 using MediatR;
 
 namespace iPractice.Application.Psychologists.Commands.UpdateAvailability
 {
-    public class UpdateAvailabilityCommand : IRequest
+    public class UpdateAvailabilityCommand : IRequest<long>
     {
-        public List<long> TimeSlotIdList { get; set; }
         public DateTime TimeFrom { get; set; }
         public DateTime TimeTo { get; set; }
         public long PsychologistId { get; set; }
+        public List<long> TimeSlots { get; set; }
     }
 
-    public class UpdateAvailabilityCommandHandler : IRequestHandler<UpdateAvailabilityCommand>
+    public class UpdateAvailabilityCommandHandler : IRequestHandler<UpdateAvailabilityCommand, long>
     {
         private readonly IPsychologistRepository repository;        
         private readonly ITimeSlotRepository timeSlotRepository;
@@ -25,18 +27,16 @@ namespace iPractice.Application.Psychologists.Commands.UpdateAvailability
             this.timeSplitter = timeSplitter;
         }
 
-        public async Task Handle(UpdateAvailabilityCommand request, CancellationToken cancellationToken)
+        public async Task<long> Handle(UpdateAvailabilityCommand request, CancellationToken cancellationToken)
         {
-            //TODO: add error handling
-            var psychologist = await repository.GetByIdAsync(request.PsychologistId);
-            //create timeslots
+            //TODO:check for existing appointments
+            //check existing appointments
+            var psychologist = await repository.GetByIdAsync(request.PsychologistId) ?? throw new EntityNotFoundException(nameof(Psychologist), request.PsychologistId); 
             var timeslots = timeSplitter.Split(request.TimeFrom, request.TimeTo, 30);
             await timeSlotRepository.AddAsync(timeslots);
-            //add timeslots to psychologists
             psychologist.Availability.AddRange(timeslots);
             await repository.UpdateAsync(psychologist);
-            //TODO: return psychologist id or not
-            //maybe call to notify client
+            return psychologist.Id;
         }
     }
 }
