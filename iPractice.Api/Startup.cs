@@ -1,3 +1,4 @@
+using iPractice.Api.Middlewares;
 using iPractice.Api.ServiceCollections;
 using iPractice.Application.Clients.Commands.CreateAvailability;
 using iPractice.Application.Common.Services;
@@ -41,6 +42,7 @@ namespace iPractice.Api
             services.AddTransient<ITimeSplitter, TimeSplitter>();
             services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(GetClientsQuery).Assembly));
 
+
             services.AddControllers();
         }
 
@@ -57,6 +59,10 @@ namespace iPractice.Api
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseMiddleware<CorrelationIdMiddleware>();
+            app.UseMiddleware<LoggerMiddleware>();
+            app.UseMiddleware<ExceptionHandlingMiddleware>();
 
             app.UseEndpoints(endpoints =>
             {

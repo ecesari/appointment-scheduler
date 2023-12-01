@@ -4,6 +4,11 @@ using iPractice.Infrastructure.Repository;
 using Microsoft.Extensions.DependencyInjection;
 using AutoMapper;
 using iPractice.Application.Common.Configurations;
+using iPractice.Api.Middlewares;
+using iPractice.Api.Models;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Options;
+using System;
 
 namespace iPractice.Api.ServiceCollections
 {
@@ -33,6 +38,8 @@ namespace iPractice.Api.ServiceCollections
 
             return services;
         }
+
+
     }
 
 }

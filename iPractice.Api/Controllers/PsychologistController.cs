@@ -3,6 +3,7 @@ using System.Net;
 using System.Threading.Tasks;
 using iPractice.Api.Models;
 using iPractice.Application.Psychologists.Commands.CreateAvailability;
+using iPractice.Application.Psychologists.Commands.UpdateAvailability;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -53,7 +54,7 @@ namespace iPractice.Api.Controllers
         [ProducesResponseType(typeof(Availability), (int)HttpStatusCode.OK)]
         public async Task<ActionResult<Availability>> UpdateAvailability([FromRoute] long psychologistId, [FromRoute] long availabilityId, [FromBody] Availability availability)
         {
-            await mediator.Send(new CreateAvailabilityCommand { PsychologistId = psychologistId, TimeFrom = availability.TimeFrom, TimeTo = availability.TimeTo });
+            await mediator.Send(new UpdateAvailabilityCommand { PsychologistId = psychologistId, TimeFrom = availability.TimeFrom, TimeTo = availability.TimeTo });
             return Ok();
         }
     }
