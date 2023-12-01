@@ -4,6 +4,8 @@ using System.Net;
 using System.Threading.Tasks;
 using System;
 using System.Text.Json;
+using iPractice.Application.Common.Exceptions;
+using Microsoft.EntityFrameworkCore;
 
 namespace iPractice.Api.Middlewares
 {
@@ -43,6 +45,14 @@ namespace iPractice.Api.Middlewares
             {
                 case ApplicationException ex:               
                     response.StatusCode = (int)HttpStatusCode.BadRequest;
+                    errorResponse.Message = ex.Message;
+                    break;
+                case EntityNotFoundException ex:
+                    response.StatusCode = (int)HttpStatusCode.NotFound;
+                    errorResponse.Message = ex.Message;
+                    break;
+                case DbUpdateConcurrencyException ex:
+                    response.StatusCode = (int)HttpStatusCode.Conflict;
                     errorResponse.Message = ex.Message;
                     break;
                 default:
