@@ -15,13 +15,11 @@ namespace iPractice.Api.Controllers
     [Route("[controller]")]
     public class ClientController : ControllerBase
     {
-        private readonly ILogger<ClientController> logger;
         private readonly IMediator mediator;
 
 
-        public ClientController(ILogger<ClientController> logger, IMediator mediator)
+        public ClientController(IMediator mediator)
         {
-            this.logger = logger;
             this.mediator = mediator;
         }
 
@@ -32,6 +30,7 @@ namespace iPractice.Api.Controllers
         /// <returns>All clients</returns>
         [HttpGet]
         [ProducesResponseType(typeof(IEnumerable<ClientResponse>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
         public async Task<ActionResult<IEnumerable<ClientResponse>>> Get()
         {
             var result = await mediator.Send(new GetClientsQuery());
@@ -46,6 +45,7 @@ namespace iPractice.Api.Controllers
         /// <returns>All time slots for the selected client</returns>
         [HttpGet("{clientId}/timeslots")]
         [ProducesResponseType(typeof(IEnumerable<PsychologistAvailabilityResponse>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
         public async Task<ActionResult<IEnumerable<PsychologistAvailabilityResponse>>> GetAvailableTimeSlots(long clientId)
         {
             var result = await mediator.Send(new GetPsychologistAvailabilityQuery { ClientId = clientId });
@@ -61,6 +61,8 @@ namespace iPractice.Api.Controllers
         [HttpPost("{clientId}/appointment")]
         [ProducesResponseType(typeof(bool), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType((int)HttpStatusCode.Conflict)]
+        [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
         public async Task<ActionResult> CreateAppointment(long clientId, [FromBody] PsychologistAvailabilityResponse timeSlot)
         {
              await mediator.Send(new CreateAppointmentCommand { ClientId = clientId, PsychologistId = timeSlot.PsychologistId, TimeSlotId = timeSlot.TimeSlotId });

@@ -3,6 +3,7 @@ using iPractice.Application.Common.Services;
 using iPractice.Domain.Entities;
 using iPractice.Domain.Repository;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace iPractice.Application.Psychologists.Commands.CreateAvailability
 {
@@ -33,7 +34,7 @@ namespace iPractice.Application.Psychologists.Commands.CreateAvailability
             await timeSlotRepository.AddAsync(timeslots);
             psychologist.Availability.AddRange(timeslots);
             await repository.UpdateAsync(psychologist);
-            //maybe call to notify client
+            //call to notify client
             return psychologist.Id;
         }
     }

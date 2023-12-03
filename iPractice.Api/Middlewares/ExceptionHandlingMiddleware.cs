@@ -48,12 +48,12 @@ namespace iPractice.Api.Middlewares
                     errorResponse.Message = ex.Message;
                     break;
                 case EntityNotFoundException ex:
-                    response.StatusCode = (int)HttpStatusCode.NotFound;
+                    response.StatusCode = (int)HttpStatusCode.BadRequest;
                     errorResponse.Message = ex.Message;
                     break;
                 case DbUpdateConcurrencyException ex:
                     response.StatusCode = (int)HttpStatusCode.Conflict;
-                    errorResponse.Message = ex.Message;
+                    errorResponse.Message = $"There was an error trying to complete your request, you can try again { ex.Message}" ;
                     break;
                 default:
                     response.StatusCode = (int)HttpStatusCode.InternalServerError;

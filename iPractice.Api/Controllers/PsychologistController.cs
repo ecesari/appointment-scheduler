@@ -14,12 +14,10 @@ namespace iPractice.Api.Controllers
     [Route("[controller]")]
     public class PsychologistController : ControllerBase
     {
-        private readonly ILogger<PsychologistController> logger;
         private readonly IMediator mediator;
 
-        public PsychologistController(ILogger<PsychologistController> logger, IMediator mediator)
+        public PsychologistController(IMediator mediator)
         {
-            this.logger = logger;
             this.mediator = mediator;
         }
 
@@ -38,6 +36,7 @@ namespace iPractice.Api.Controllers
         [HttpPost("{psychologistId}/availability")]
         [ProducesResponseType(typeof(bool), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
         public async Task<ActionResult> CreateAvailability([FromRoute] long psychologistId, [FromBody] Availability availability)
         {
            await mediator.Send(new CreateAvailabilityCommand { PsychologistId = psychologistId, TimeFrom = availability.TimeFrom, TimeTo = availability.TimeTo });
@@ -52,6 +51,8 @@ namespace iPractice.Api.Controllers
         /// <returns>List of availability slots</returns>
         [HttpPut("{psychologistId}/availability/{availabilityId}")]
         [ProducesResponseType(typeof(Availability), (int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<ActionResult<Availability>> UpdateAvailability([FromRoute] long psychologistId, [FromRoute] long availabilityId, [FromBody] Availability availability)
         {
             await mediator.Send(new UpdateAvailabilityCommand { PsychologistId = psychologistId, TimeFrom = availability.TimeFrom, TimeTo = availability.TimeTo });
